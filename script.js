@@ -1,8 +1,9 @@
 console.log("Le script est bien connecté !");
 
-let inputDisplay = document.querySelector('input');
-let buttonClick = document.querySelectorAll('button');
-let buttonEgal = document.getElementById('ButtonEgal');
+const inputDisplay = document.querySelector('input');
+const buttonClick = document.querySelectorAll('button');
+const buttonEgal = document.getElementById('ButtonEgal');
+
 // stocke toutes ce que l'utilisateur tape
 let expression = '';
 
@@ -24,13 +25,14 @@ buttonClick.forEach(button => {
 
 
 buttonEgal.addEventListener('click', () => {
+    inputDisplay.value = calculate(expression)
+    expression = inputDisplay.value;
+});
+  
 
-}
-
-
-function calculate(expression) {
+function calculate(expr) {
     // Separer les nombre et les operateurs
-    const tokens = expression.match(/\d+(\.\d+)?|[+\-*/]/g)
+    const tokens = expr.match(/\d+(\.\d+)?|[+\-*/]/g)
     console.log(tokens);
 
 
@@ -45,16 +47,22 @@ function calculate(expression) {
             stack.push(token === "*" ? prev * next : prev / next);
             i += 2;
         }else {
-        stack.push(token);
-        i++;
+            stack.push(token);
+            i++;
+        }
     }
-} 
 
 
-// Faire les addition et soustraction
+    // Gerer les operation + et -
+    let result = parseFloat(stack[0]);
+    i = 1;
+    while (i < stack.length) {
+        const operator = stack[i];
+        const next = parseFloat(stack[i + 1]);
+        if (operator === "+") result += next 
+        else if (operator === "-") result -= next;
+        i += 2;
+    }
 
-return res
-
-})
-
-
+    return result;
+}
