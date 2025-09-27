@@ -6,27 +6,42 @@ const buttonEgal = document.getElementById('ButtonEgal');
 
 // stocke toutes ce que l'utilisateur tape
 let expression = '';
+let booleanCalculTerminer = false;
 
-buttonClick.forEach(button => {
-    button.addEventListener('click', (e) => {
-        let value = e.target.textContent;
-        expression += value;
-        inputDisplay.value += value;
-        console.log(e.target.textContent);
-        
+buttonClick.forEach(button => {        
+
+    button.addEventListener('click', (e) => {   
+        let value = e.target.textContent;     
+    
         if(value === 'C'){
             expression = '';
             inputDisplay.value = '';
+            booleanCalculTerminer = false;
+            return
         }
+
+        //    on repart sur une nouvelle expression si c’est un chiffre après un calcul
+        if (booleanCalculTerminer) {
+            if (/\d/.test(value)) { // si c’est un chiffre
+                expression = "";
+                inputDisplay.value = "";
+            }
+        booleanCalculTerminer = false;
+
+        }
+
+        
+        expression += value;
+        inputDisplay.value += value;
+        console.log(e.target.textContent);     
     })
 })
-
-
 
 
 buttonEgal.addEventListener('click', () => {
     inputDisplay.value = calculate(expression)
     expression = inputDisplay.value;
+    booleanCalculTerminer = true;
 });
   
 
