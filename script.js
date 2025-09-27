@@ -8,24 +8,25 @@ const buttonEgal = document.getElementById('ButtonEgal');
 let expression = '';
 let booleanCalculTerminer = false;
 
+
+function endWithOperator(expr) {
+    operators = ['+', '-', '*', '/'];
+    if(!expr) return false;
+    const lastChar = expr[expr.length - 1];
+    return operators.includes(lastChar);
+}
+
+
 buttonClick.forEach(button => {        
 
     button.addEventListener('click', (e) => {   
-        let value = e.target.textContent;   
-        
-        function endWithOperator(expr) {
-            operators = ['+', '-', '*', '/'];
-            if(!expr) return false;
-            const lastChar = expr[expr.length - 1];
-            return operators.includes(lastChar);
-        }
-    
+        let value = e.target.textContent;  
+       
         if (!/\d/.test(value)) {
            if (expression === '' ||  endWithOperator(expression)) {
                 return; // ne rien faire si l'expression est vide ou se termine par un opérateur
             }
         }
-
 
         if(value === 'C'){
             expression = '';
@@ -41,10 +42,8 @@ buttonClick.forEach(button => {
                 inputDisplay.value = "";
             }
         booleanCalculTerminer = false;
-
         }
-
-        
+      
         expression += value;
         inputDisplay.value += value;
         console.log(e.target.textContent);     
@@ -53,6 +52,12 @@ buttonClick.forEach(button => {
 
 
 buttonEgal.addEventListener('click', () => {
+    // Retirer le dernier caractère si c'est un opérateur
+    if (endWithOperator(expression)) {
+        expression = expression.slice(0, -1); // retirer le dernier caractère
+    } ; 
+
+    
     inputDisplay.value = calculate(expression)
     expression = inputDisplay.value;
     booleanCalculTerminer = true;
@@ -63,7 +68,6 @@ function calculate(expr) {
     // Separer les nombre et les operateurs
     const tokens = expr.match(/\d+(\.\d+)?|[+\-*/]/g)
     console.log(tokens);
-
 
     // Gerer la prioriter des operation * et /
     let stack = [];
