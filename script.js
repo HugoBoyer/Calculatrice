@@ -11,8 +11,22 @@ let booleanCalculTerminer = false;
 buttonClick.forEach(button => {        
 
     button.addEventListener('click', (e) => {   
-        let value = e.target.textContent;     
+        let value = e.target.textContent;   
+        
+        function endWithOperator(expr) {
+            operators = ['+', '-', '*', '/'];
+            if(!expr) return false;
+            const lastChar = expr[expr.length - 1];
+            return operators.includes(lastChar);
+        }
     
+        if (!/\d/.test(value)) {
+           if (expression === '' ||  endWithOperator(expression)) {
+                return; // ne rien faire si l'expression est vide ou se termine par un opérateur
+            }
+        }
+
+
         if(value === 'C'){
             expression = '';
             inputDisplay.value = '';
