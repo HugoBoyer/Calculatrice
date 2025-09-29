@@ -21,19 +21,19 @@ buttonClick.forEach(button => {
 
     button.addEventListener('click', (e) => {   
         let value = e.target.textContent;  
-       
-        if (!/\d/.test(value)) {
-           if (expression === '' ||  endWithOperator(expression)) {
-                return; // ne rien faire si l'expression est vide ou se termine par un opérateur
-            }
-        }
-
         if(value === 'C'){
             expression = '';
             inputDisplay.value = '';
             booleanCalculTerminer = false;
             return
         }
+        
+        if (!/\d/.test(value)) {
+           if (expression === '' ||  endWithOperator(expression)) {
+                return; // ne rien faire si l'expression est vide ou se termine par un opérateur
+            }
+        }
+
 
         //    on repart sur une nouvelle expression si c’est un chiffre après un calcul
         if (booleanCalculTerminer) {
