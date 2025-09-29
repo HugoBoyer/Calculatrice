@@ -11,7 +11,7 @@ let TapePuissanceY = false;
 
 // Fonction pour vérifier si l'expression se termine par un opérateur
 function endWithOperator(expr) {
-    operators = ['+', '-', '*', '/'];
+    const operators = ['+', '-', '*', '/'];
     if(!expr) return false;
     const lastChar = expr[expr.length - 1];
     return operators.includes(lastChar);
@@ -19,7 +19,6 @@ function endWithOperator(expr) {
 
 
 buttonClick.forEach(button => {        
-
     button.addEventListener('click', (e) => {   
         let value = e.target.textContent;  
         if(value === 'C'){
@@ -28,6 +27,7 @@ buttonClick.forEach(button => {
             booleanCalculTerminer = false;
             return
         }
+        
         
         if (!/\d/.test(value)) {
            if (expression === '' ||  endWithOperator(expression)) {
@@ -44,14 +44,31 @@ buttonClick.forEach(button => {
             }
         booleanCalculTerminer = false;
         }
-      
+
+        // Gérer le cas de la puissance y
+        if(value === "xʸ"){
+            TapePuissanceY = true;
+            expression += "xʸ";
+            inputDisplay.value += "^";
+            return;
+        }
+
+
+        if (TapePuissanceY && /\d/.test(value)) {
+            inputDisplay.value += Superscript(value);
+            expression += value;
+            booleanCalculTerminer = false;
+            TapePuissanceY = false;
+            return; // NE PAS mettre TapePuissanceY = false ici
+        }
+        
         // Ajouter la valeur cliquée à l'expression
-        expression += value;
+        
         inputDisplay.value += (
             value === "x²" ? "²" : 
-            value === "x³" ? "³" : 
-            value === "xʸ" ? "^" : value       
+            value === "x³" ? "³" : value       
         );
+        expression += value;
         console.log(e.target.textContent);     
     })
 })
@@ -62,7 +79,6 @@ buttonEgal.addEventListener('click', () => {
     if (endWithOperator(expression)) {
         expression = expression.slice(0, -1); // retirer le dernier caractère
     } ; 
-
     
     inputDisplay.value = calculate(expression)
     expression = inputDisplay.value;
@@ -83,13 +99,19 @@ function calculate(expr) {
         if(!isNaN(token)) {
             stackPuissance.push(parseFloat(token));
         }
-        else if(token === "x²" || token === "x³" || token === "xʸ") {
+        else if(token === "x²" || token === "x³") {
             const prev = stackPuissance.pop();
             stackPuissance.push(
                 token === "x²" ? prev**2 
                 : token === "x³" ? prev**3 
-                : token === "xʸ" ?  prev**parseFloat(tokens[i + 1]) : prev
+                : prev
             );
+        } else if(token === "xʸ") {
+            if (tokens[i + 1] === undefined) return NaN;
+            const prev = stackPuissance.pop();
+            const next = parseFloat(tokens[i + 1]);
+            stackPuissance.push(prev**next);
+            i++; // sauter le nombre suivant car il a deja ete utilise
         } else {
             stackPuissance.push(token);
         }
@@ -121,11 +143,10 @@ function calculate(expr) {
         else if (operator === "-") result -= next;
         i += 2;
     }
-
     return result;
 }
 
-/*
+
 function Superscript(express){
     const UnicodeMap = {
         '0': '⁰',
@@ -140,4 +161,4 @@ function Superscript(express){
         '9': '⁹',
     }
     return express.toString().split('').map(char => UnicodeMap[char] || char).join('');
-}*/
+}
