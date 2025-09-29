@@ -7,8 +7,9 @@ const buttonEgal = document.getElementById('ButtonEgal');
 // stocke toutes ce que l'utilisateur tape
 let expression = '';
 let booleanCalculTerminer = false;
+let TapePuissanceY = false;
 
-
+// Fonction pour vérifier si l'expression se termine par un opérateur
 function endWithOperator(expr) {
     operators = ['+', '-', '*', '/'];
     if(!expr) return false;
@@ -35,7 +36,7 @@ buttonClick.forEach(button => {
         }
 
 
-        //    on repart sur une nouvelle expression si c’est un chiffre après un calcul
+        // on repart sur une nouvelle expression si c’est un chiffre après un calcul
         if (booleanCalculTerminer) {
             if (/\d/.test(value)) { // si c’est un chiffre
                 expression = "";
@@ -44,8 +45,13 @@ buttonClick.forEach(button => {
         booleanCalculTerminer = false;
         }
       
+        // Ajouter la valeur cliquée à l'expression
         expression += value;
-        inputDisplay.value += value;
+        inputDisplay.value += (
+            value === "x²" ? "²" : 
+            value === "x³" ? "³" : 
+            value === "xʸ" ? "^" : value       
+        );
         console.log(e.target.textContent);     
     })
 })
@@ -66,17 +72,37 @@ buttonEgal.addEventListener('click', () => {
 
 function calculate(expr) {
     // Separer les nombre et les operateurs
-    const tokens = expr.match(/\d+(\.\d+)?|[+\-*/]/g)
-    console.log(tokens);
+    const tokens = expr.match(/\d+(\.\d+)?|x²|x³|xʸ|[+\-*/]/g)
+    if (!tokens) return 0;
+    console.log("Tokens:", tokens);
+
+    // Gérer l'opération x²    
+    let stackPuissance = [];
+    for (let i = 0; i < tokens.length; i++) {
+        let token = tokens[i]
+        if(!isNaN(token)) {
+            stackPuissance.push(parseFloat(token));
+        }
+        else if(token === "x²" || token === "x³" || token === "xʸ") {
+            const prev = stackPuissance.pop();
+            stackPuissance.push(
+                token === "x²" ? prev**2 
+                : token === "x³" ? prev**3 
+                : token === "xʸ" ?  prev**parseFloat(tokens[i + 1]) : prev
+            );
+        } else {
+            stackPuissance.push(token);
+        }
+    }
 
     // Gerer la prioriter des operation * et /
     let stack = [];
     let i = 0;
-    while (i < tokens.length) {
-        let token = tokens[i]
+    while (i < stackPuissance.length) {
+        let token = stackPuissance[i]
         if(token === "*" || token === "/") {
             const prev = parseFloat(stack.pop());
-            const next = parseFloat(tokens[i + 1]); // le nombre suivant
+            const next = parseFloat(stackPuissance[i + 1]); // le nombre suivant
             stack.push(token === "*" ? prev * next : prev / next);
             i += 2;
         }else {
@@ -84,7 +110,6 @@ function calculate(expr) {
             i++;
         }
     }
-
 
     // Gerer les operation + et -
     let result = parseFloat(stack[0]);
@@ -99,3 +124,20 @@ function calculate(expr) {
 
     return result;
 }
+
+/*
+function Superscript(express){
+    const UnicodeMap = {
+        '0': '⁰',
+        '1': '¹',
+        '2': '²',
+        '3': '³',
+        '4': '⁴',
+        '5': '⁵',
+        '6': '⁶',
+        '7': '⁷',
+        '8': '⁸',
+        '9': '⁹',
+    }
+    return express.toString().split('').map(char => UnicodeMap[char] || char).join('');
+}*/
