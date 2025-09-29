@@ -17,6 +17,30 @@ function endWithOperator(expr) {
     return operators.includes(lastChar);
 }
 
+function handleOperatorAtStart(op) {
+
+const lastChar = expression[expression.length - 1];
+
+    if (expression === "") {
+        if(op === '-' || op === '+') {
+        expression = '0' + op; // empêche de commencer par un opérateur
+        inputDisplay.value = '0' + op;
+        }
+
+    return;
+    }
+
+    if(/[+\-*/]/.test(lastChar) && /[+\-*/]/.test(op)) {
+        // Remplacer le dernier opérateur par le nouveau
+        expression = expression.slice(0, -1) + op;
+        inputDisplay.value = inputDisplay.value.slice(0, -1) + op;
+        return true; // Indique qu'un remplacement a été effectué
+    }
+
+    expression += op;
+    inputDisplay.value += op;
+}
+
 
 buttonClick.forEach(button => {        
     button.addEventListener('click', (e) => {   
@@ -27,12 +51,10 @@ buttonClick.forEach(button => {
             booleanCalculTerminer = false;
             return
         }
-        
-        
-        if (!/\d/.test(value)) {
-           if (expression === '' ||  endWithOperator(expression)) {
-                return; // ne rien faire si l'expression est vide ou se termine par un opérateur
-            }
+
+        if(/[+\-*/]/.test(value)) {
+            handleOperatorAtStart(value);
+            return; // Sortir de la fonction après avoir géré l'opérateur
         }
 
 
