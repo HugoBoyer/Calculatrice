@@ -117,7 +117,7 @@ function calculate(expr, completeOperation = false) {
     }
     console.log("Expr corrigée:", expr); 
     // Separer les nombre et les operateurs
-    const tokens = expr.match(/\d+(\.\d+)?|x²|x³|xʸ|[+\-*/]/g)
+    const tokens = expr.match(/\d+(\.\d+)?|x²|x³|xʸ|%|[+\-*/]/g)
     if (!tokens) return 0;
     console.log("Tokens:", tokens);
 
@@ -147,14 +147,34 @@ function calculate(expr, completeOperation = false) {
         }
     }
 
+
+    // Gerer les pourcentage 
+    let stackPourcentage = [];
+    for (let i = 0; i < stackPuissance.length; i++) {
+        let token = stackPuissance[i]
+        if(token === "%") {
+            const prev = stackPourcentage.pop();
+            const op = stackPourcentage[stackPourcentage.length - 1]; // l'operateur avant le nombre
+            if(op === "+" || token === "-") {
+                const Beforeop = stackPourcentage[stackPourcentage.length - 2];
+                stackPourcentage.push(Beforeop * (prev / 100));
+
+            } else {
+                stackPourcentage.push(prev / 100);
+            }
+        } else {
+            stackPourcentage.push(token);
+        }
+    }
+
     // Gerer la prioriter des operation * et /
     let stack = [];
     let i = 0;
-    while (i < stackPuissance.length) {
-        let token = stackPuissance[i]
+    while (i < stackPourcentage.length) {
+        let token = stackPourcentage[i]
         if(token === "*" || token === "/") {
             const prev = parseFloat(stack.pop());
-            const next = parseFloat(stackPuissance[i + 1]); // le nombre suivant
+            const next = parseFloat(stackPourcentage[i + 1]); // le nombre suivant
             stack.push(token === "*" ? prev * next : prev / next);
             i += 2;
         }else {
