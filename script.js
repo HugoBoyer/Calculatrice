@@ -3,6 +3,13 @@ console.log("Le script est bien connecté !");
 const inputDisplay = document.querySelector('input[type="text"]');
 const buttonClick = document.querySelectorAll('button');
 const buttonEgal = document.getElementById('ButtonEgal');
+const toggleButton = document.getElementById('toggle');
+const body = document.body;
+
+// Mode sombre / clair
+toggleButton.addEventListener('click', () => {
+    body.classList.toggle('dark-mode');
+});
 
 // stocke toutes ce que l'utilisateur tape
 let expression = '';

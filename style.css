@@ -10,7 +10,6 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    color: white;
     font-family: 'Courier New', Courier, monospace;
 }
 
@@ -28,7 +27,7 @@ body {
     font-size: 50px;
     margin-bottom: 20px;
     margin-top: 20px;
-    border: 1px solid white;
+    border: 0px solid white;
 }
 
 /* Style pour le conteneur des boutons */
@@ -47,31 +46,70 @@ body {
     font-size: 30px;
 }
 
+input[type="text"] {
+    color: black;
+}
+
+.switch {
+  position: absolute;
+  display: inline-block;
+  top: 20px;
+  right: 10px;
+  width: 60px;
+  height: 34px;
+}
 
 
+.switch input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+  }
 
 
-/* Style pour le switch */
 .slider {
     position: absolute;
     cursor: pointer;
-    top: 10px;
-    right: 10px;
-    width: 60px;
-    height: 34px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background-color: #ccc;
     transition: .4s;
     border-radius: 34px;
 }
 
-.slider.round::before {
+
+.round::before {
+    content: "";
     position: absolute;
     border-radius: 50%;
-    content: "";
     background-color: white;
     height: 26px;
     width: 26px;
     bottom: 4px;
     left: 4px;
-
+    transition: transform .4s;
 }
+
+input:checked + .slider {
+    background-color: #534f4f;
+  }
+
+/* Quand on coche */
+input:checked + .slider::before {
+    transform: translateX(26px);
+}
+
+
+/* Style pour le mode sombre */
+body.dark-mode ,
+body.dark-mode button ,
+body.dark-mode .display {
+    background-color: #2c2929;
+    color: white;
+}
+
