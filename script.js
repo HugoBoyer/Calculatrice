@@ -1,5 +1,4 @@
 console.log("Le script est bien connecté !");
-
 const inputDisplay = document.querySelector('input[type="text"]');
 const buttonClick = document.querySelectorAll('button');
 const buttonEgal = document.getElementById('ButtonEgal');
@@ -26,15 +25,12 @@ function endWithOperator(expr) {
 
 // Gérer le cas où l'utilisateur tape un opérateur en premier
 function handleOperatorAtStart(op) {
-
 const lastChar = expression[expression.length - 1];
-
     if (expression === "") {
-        if(op === '-' || op === '+') {
+        if(op === '-' || op === '+' || op === '*' || op === '/') {
         expression = '0' + op; // empêche de commencer par un opérateur
         inputDisplay.value = '0' + op;
         }
-
     return;
     }
 
@@ -44,27 +40,22 @@ const lastChar = expression[expression.length - 1];
         inputDisplay.value = inputDisplay.value.slice(0, -1) + op;
         return true; // Indique qu'un remplacement a été effectué
     }
-
     expression += op;
     inputDisplay.value += op;
 }
 
-
 buttonClick.forEach(button => {        
     button.addEventListener('click', (e) => {   
         let value = e.target.textContent;  
+        if(!value || value === '=' ) return; // ignorer les boutons sans valeur ou le bouton '='
+        
+        // Gérer le bouton C (clear)
         if(value === 'C'){
             expression = '';
             inputDisplay.value = '';
             booleanCalculTerminer = false;
             return
         }
-
-        if(/[+\-*/]/.test(value)) {
-            handleOperatorAtStart(value);
-            return; // Sortir de la fonction après avoir géré l'opérateur
-        }
-
 
         // on repart sur une nouvelle expression si c’est un chiffre après un calcul
         if (booleanCalculTerminer) {
@@ -75,6 +66,12 @@ buttonClick.forEach(button => {
         booleanCalculTerminer = false;
         }
 
+        // Gérer le cas où l'utilisateur tape un opérateur en premier
+        if(/[+\-*/]/.test(value)) {
+            handleOperatorAtStart(value);
+            return; // Sortir de la fonction après avoir géré l'opérateur
+        }
+        
         // Gérer le cas de la puissance y
         if(value === "xʸ"){
             TapePuissanceY = true;
@@ -82,7 +79,6 @@ buttonClick.forEach(button => {
             inputDisplay.value += "^";
             return;
         }
-
 
         if (TapePuissanceY && /\d/.test(value)) {
             inputDisplay.value += Superscript(value);
@@ -92,8 +88,7 @@ buttonClick.forEach(button => {
             return; // NE PAS mettre TapePuissanceY = false ici
         }
         
-        // Ajouter la valeur cliquée à l'expression
-        
+        // Ajouter la valeur cliquée à l'expression      
         inputDisplay.value += (
             value === "x²" ? "²" : 
             value === "x³" ? "³" : value       
@@ -103,20 +98,24 @@ buttonClick.forEach(button => {
     })
 })
 
-
 buttonEgal.addEventListener('click', () => {
-    // Retirer le dernier caractère si c'est un opérateur
-    if (endWithOperator(expression)) {
-        expression = expression.slice(0, -1); // retirer le dernier caractère
-    } ; 
-    
-    inputDisplay.value = calculate(expression)
-    expression = inputDisplay.value;
+    if(!expression) return; // si l'expression est vide, ne rien faire
+
+    // Calculer le résultat avec 0 si l'expression se termine par un opérateur
+    const result = calculate(expression, true);
+    console.log("Resultat:", result);
+
+    inputDisplay.value = result
+    expression = result.toString(); // pour continuer les calculs avec le résultat
     booleanCalculTerminer = true;
 });
-  
 
-function calculate(expr) {
+
+function calculate(expr, completeOperation = false) {
+    if(completeOperation && endWithOperator(expr)) {
+        expr += '0'; // Ajouter 0 si l'expression se termine par un opérateur
+    }
+    console.log("Expr corrigée:", expr); 
     // Separer les nombre et les operateurs
     const tokens = expr.match(/\d+(\.\d+)?|x²|x³|xʸ|[+\-*/]/g)
     if (!tokens) return 0;
@@ -140,6 +139,7 @@ function calculate(expr) {
             if (tokens[i + 1] === undefined) return NaN;
             const prev = stackPuissance.pop();
             const next = parseFloat(tokens[i + 1]);
+            if (isNaN(prev) || isNaN(next)) return 0;
             stackPuissance.push(prev**next);
             i++; // sauter le nombre suivant car il a deja ete utilise
         } else {
@@ -173,6 +173,7 @@ function calculate(expr) {
         else if (operator === "-") result -= next;
         i += 2;
     }
+
     return result;
 }
 

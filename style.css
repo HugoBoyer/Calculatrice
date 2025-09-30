@@ -11,6 +11,7 @@ body {
     align-items: center;
     height: 100vh;
     font-family: 'Courier New', Courier, monospace;
+    background-color: #f8f3f3;
 }
 
 .calculator {
@@ -21,22 +22,23 @@ body {
 
 .display {
     width: 100%;
-    height: 20vh;
+    height: 30vh;
     text-align: right;
     box-sizing: border-box;
-    font-size: 50px;
+    font-size: 60px;
     margin-bottom: 20px;
     margin-top: 20px;
     border: 0px solid white;
+    background-color: #f8f3f3;
 }
 
 /* Style pour le conteneur des boutons */
 .buttons-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 5px 5px;
     width: 100%;
-    height: calc(100vh - 20vh - 20px - 20px - 20px - 34px); /* calcule la hauteur restante */
+    height: calc(100vh - 30vh - 20px - 20px - 20px - 34px); /* calcule la hauteur restante */
     padding-bottom: 20px; /* enlève la marge de .display et body */
 }
 
@@ -44,10 +46,15 @@ body {
 .buttons-container button {
     width: 100%;
     font-size: 30px;
+    background: #fff;
+    border-radius: 5px;
+    border: 1px solid rgb(241, 234, 234);
+    box-shadow: 1px 1px #dbd7d7;
 }
 
 input[type="text"] {
     color: black;
+    outline: none;
 }
 
 .switch {
