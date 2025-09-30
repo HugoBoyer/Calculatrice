@@ -19,6 +19,7 @@ body {
     height: 100%;
 }
 
+
 .display {
     width: 100%;
     height: 20vh;
@@ -30,16 +31,47 @@ body {
     border: 1px solid white;
 }
 
+/* Style pour le conteneur des boutons */
 .buttons-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 5px 5px;
     width: 100%;
-    height: calc(100vh - 20vh - 20px - 20px - 20px); /* calcule la hauteur restante */
+    height: calc(100vh - 20vh - 20px - 20px - 20px - 34px); /* calcule la hauteur restante */
     padding-bottom: 20px; /* enlève la marge de .display et body */
 }
 
+/* Style pour les boutons */
 .buttons-container button {
     width: 100%;
     font-size: 30px;
+}
+
+
+
+
+
+/* Style pour le switch */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 10px;
+    right: 10px;
+    width: 60px;
+    height: 34px;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider.round::before {
+    position: absolute;
+    border-radius: 50%;
+    content: "";
+    background-color: white;
+    height: 26px;
+    width: 26px;
+    bottom: 4px;
+    left: 4px;
+
 }

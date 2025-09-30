@@ -1,6 +1,6 @@
 console.log("Le script est bien connecté !");
 
-const inputDisplay = document.querySelector('input');
+const inputDisplay = document.querySelector('input[type="text"]');
 const buttonClick = document.querySelectorAll('button');
 const buttonEgal = document.getElementById('ButtonEgal');
 
@@ -17,6 +17,7 @@ function endWithOperator(expr) {
     return operators.includes(lastChar);
 }
 
+// Gérer le cas où l'utilisateur tape un opérateur en premier
 function handleOperatorAtStart(op) {
 
 const lastChar = expression[expression.length - 1];
