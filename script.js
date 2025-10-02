@@ -167,17 +167,23 @@ function calculate(expr, completeOperation = false) {
         }
     }
 
+    // Gerer la racine car elle a la plus haute prioriter
     let stackRacine = [];
     for(let i =0; i < stackPourcentage.length; i++) {
         let token = stackPourcentage[i]
         if(token === "√") {
             const next = parseFloat(stackPourcentage[i + 1]);
+            if(typeof next !== "number") return NaN;
             stackRacine.push(Math.sqrt(next));
             i++; // sauter le nombre suivant car il a deja ete utilise
+    } else if (typeof token === "number") {
+        stackRacine.push(token);
     } else {
         stackRacine.push(token);
     }
-}
+    }
+
+
     // Gerer la prioriter des operation * et /
     let stack = [];
     let i = 0;
