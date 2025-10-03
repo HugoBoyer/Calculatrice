@@ -117,14 +117,16 @@ function calculate(expr, completeOperation = false) {
     }
     console.log("Expr corrigée:", expr); 
     // Separer les nombre et les operateurs
-    const tokens = expr.match(/\d+(\.\d+)?|x²|x³|xʸ|%|√|[+\-*/]/g)
-    if (!tokens) return 0;
+    const tokens = expr.match(/sin|cos|tan|log|\d+(\.\d+)?|x²|x³|xʸ|%|√|[+\-*/()]/g)
+    if (!tokens) return 0; 
+       // Evaluer les parenthèses en premier
+    let tokensWithoutParentheses = evalParenthese(tokens);
     console.log("Tokens:", tokens);
 
     // Gérer l'opération x²    
     let stackPuissance = [];
-    for (let i = 0; i < tokens.length; i++) {
-        let token = tokens[i]
+    for (let i = 0; i < tokensWithoutParentheses.length; i++) {
+        let token = tokensWithoutParentheses[i]
         if(!isNaN(token)) {
             stackPuissance.push(parseFloat(token));
         }
@@ -136,9 +138,9 @@ function calculate(expr, completeOperation = false) {
                 : prev
             );
         } else if(token === "xʸ") {
-            if (tokens[i + 1] === undefined) return NaN;
+            if (tokensWithoutParentheses[i + 1] === undefined) return NaN;
             const prev = stackPuissance.pop();
-            const next = parseFloat(tokens[i + 1]);
+            const next = parseFloat(tokensWithoutParentheses[i + 1]);
             if (isNaN(prev) || isNaN(next)) return 0;
             stackPuissance.push(prev**next);
             i++; // sauter le nombre suivant car il a deja ete utilise
@@ -146,12 +148,12 @@ function calculate(expr, completeOperation = false) {
             stackPuissance.push(token);
         }
     }
-
+    tokensWithoutParentheses = stackPuissance;
 
     // Gerer les pourcentage 
     let stackPourcentage = [];
-    for (let i = 0; i < stackPuissance.length; i++) {
-        let token = stackPuissance[i]
+    for (let i = 0; i < tokensWithoutParentheses.length; i++) {
+        let token = tokensWithoutParentheses[i]
         if(token === "%") {
             const prev = stackPourcentage.pop();
             const op = stackPourcentage[stackPourcentage.length - 1]; // l'operateur avant le nombre
@@ -166,14 +168,16 @@ function calculate(expr, completeOperation = false) {
             stackPourcentage.push(token);
         }
     }
+ tokensWithoutParentheses = stackPourcentage;
+
 
     // Gerer la racine car elle a la plus haute prioriter
     let stackRacine = [];
-    for(let i =0; i < stackPourcentage.length; i++) {
-        let token = stackPourcentage[i]
+    for(let i =0; i < tokensWithoutParentheses.length; i++) {
+        let token = tokensWithoutParentheses[i]
         if(token === "√") {
-            const next = parseFloat(stackPourcentage[i + 1]);
-            if(typeof next !== "number") return NaN;
+            const next = parseFloat(tokensWithoutParentheses[i + 1]);
+            if (isNaN(next)) return NaN;
             stackRacine.push(Math.sqrt(next));
             i++; // sauter le nombre suivant car il a deja ete utilise
     } else if (typeof token === "number") {
@@ -182,16 +186,33 @@ function calculate(expr, completeOperation = false) {
         stackRacine.push(token);
     }
     }
+ tokensWithoutParentheses = stackRacine;
+
+    // Gerer le Cos Radian
+    let stackCos = [];
+    for (let i = 0; i < tokensWithoutParentheses.length; i++) {
+        let token = tokensWithoutParentheses[i]
+        if(token === "cos") {
+            const next = parseFloat(tokensWithoutParentheses[i + 1]);
+            if(typeof next !== "number") return "NaN";
+            stackCos.push(Math.cos(next))
+            i++;
+        } else {
+            stackCos.push(token);
+        }
+    }
+ tokensWithoutParentheses = stackCos;
+
 
 
     // Gerer la prioriter des operation * et /
     let stack = [];
     let i = 0;
-    while (i < stackRacine.length) {
-        let token = stackRacine[i]
+    while (i < tokensWithoutParentheses.length) {
+        let token = tokensWithoutParentheses[i]
         if(token === "*" || token === "/") {
             const prev = parseFloat(stack.pop());
-            const next = parseFloat(stackRacine[i + 1]); // le nombre suivant
+            const next = parseFloat(tokensWithoutParentheses [i + 1]); // le nombre suivant
             stack.push(token === "*" ? prev * next : prev / next);
             i += 2;
         }else {
@@ -210,10 +231,37 @@ function calculate(expr, completeOperation = false) {
         else if (operator === "-") result -= next;
         i += 2;
     }
-
     return result;
 }
 
+ // Gerer les parentheses 
+function evalParenthese(tokens) {
+    let stackParentheses = [];
+    let temp = [];
+
+    for(let token of tokens) {
+        if(token === "(") {
+            temp.push(stackParentheses)
+            stackParentheses = []
+        } else if (token === ")") {
+            let value = calculate(stackParentheses.join(''), true);
+            stackParentheses = temp.pop()
+            stackParentheses.push(value.toString());
+        }
+        else {
+            stackParentheses.push(token)
+        }
+    }
+    return stackParentheses
+}
+
+// Calcul simple sans parenthèses
+function calculateSimple(tokens){
+    // On peut réutiliser la même logique que calculate pour x², %, √, sin/cos/tan etc.
+    // Ici pour simplifier, on retourne juste les nombres si aucun opérateur
+    if(tokens.length === 1) return tokens[0];
+    return calculate(tokens.join(''), true);
+}
 
 function Superscript(express){
     const UnicodeMap = {
