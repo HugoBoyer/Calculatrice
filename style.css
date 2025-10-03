@@ -65,7 +65,7 @@ BOUTONS - Grid responsive
     background: #fff;
     border-radius: 6px;
     border: 1px solid rgb(241, 234, 234);
-    box-shadow: 2px 1px #dbd7d7;
+    box-shadow: 1px 1px #dbd7d7;
     cursor: pointer;
     transition: all 0.2s ease;
 }
@@ -73,7 +73,6 @@ BOUTONS - Grid responsive
 .buttons-container button:hover {
     background: #f6f5f5;
     transform: translateY(-2px);
-    box-shadow: 2px 4px 8px rgba(0,0,0,0.15);
 }
 
 /* ========================================
@@ -145,13 +144,12 @@ body.dark-mode .display {
     color: white;
 }
 
-
 /* ========================================
    RESPONSIVE - TABLETTE (768px et moins)
    ======================================== */
 @media (max-width: 768px) {
     .buttons-container {
-        gap: 10px;
+        gap: 5px;
         }
     .calculator {
         max-width: 100%;
@@ -179,9 +177,27 @@ body.dark-mode .display {
    }
 
 /* ========================================
-   RESPONSIVE - TABLETTE (768px et moins)
+   RESPONSIVE - TABLETTE (480px et moins)
    ======================================== */
 @media (max-width: 480px) {
+
+   .calculator {
+        height: calc(100vh - 20px); /* Prend toute la hauteur */
+    }
+
+      .display {
+        font-size: clamp(45px, 6vw, 50px);
+    }
+
+     .buttons-container {
+        gap: 4px;
+     }
+
+      .buttons-container button {
+        font-size: clamp(16px, 4vw, 24px);
+        border-radius: 6px;
+    }
+
         .switch {
         top: 10px;
         right: 10px;
@@ -199,4 +215,80 @@ body.dark-mode .display {
     input:checked + .slider::before {
         transform: translateX(21px);
     }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ========================================
+   RESPONSIVE - TRÈS PETIT MOBILE (360px et moins)
+   ======================================== */
+@media (max-width: 360px) {
+    .buttons-container {
+        gap: 3px;
+    }
+
+    .buttons-container button {
+        font-size: clamp(14px, 3.5vw, 20px);
+    }
+
+    .display {
+        font-size: clamp(40px, 5vw, 45px);
+    }
+}
+
+/* ========================================
+   ORIENTATION PAYSAGE MOBILE
+   ======================================== */
+@media (max-height: 500px) and (orientation: landscape) {
+     body {
+        padding: 5px;
+    }
+    .display {
+        width: 100%;
+        height: auto;
+        min-height: 100%;
+        margin-bottom: 20px;
+        margin-right: 0;
+        font-size: clamp(35px, 2vw, 40px)
+    }
+
+    .buttons-container {
+        gap: 5px;
+        width: 100%;
+    }
+
+    .buttons-container button {
+        min-height: 9vh;
+        margin-bottom: 0;
+        margin-right: 0;
+        font-size: clamp(15px , 4vw, 18px);
+    }
+
+    .switch {
+        top: 15px;
+        left: 15px;
+        width: 50px;
+        height: 28px;
+    }
+    .round::before {
+        height: 22px;
+        width: 22px;
+        bottom: 3px;
+        left: 3px;
+    }
+
+    input:checked + .slider::before {
+        transform: translateX(22px);
+    }  
 }
