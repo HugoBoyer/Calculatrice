@@ -117,7 +117,7 @@ function calculate(expr, completeOperation = false) {
     }
     console.log("Expr corrigée:", expr); 
     // Separer les nombre et les operateurs
-    const tokens = expr.match(/sin|cos|tan|log|\d+(\.\d+)?|x²|x³|xʸ|%|√|[+\-*/()]/g)
+    const tokens = expr.match(/sin|cos|tan|log|\d+(\.\d+)?|x²|x³|xʸ|%|√|π|[+\-*/()]/g)
     if (!tokens) return 0; 
        // Evaluer les parenthèses en premier
     let tokensWithoutParentheses = evalParenthese(tokens);
@@ -237,6 +237,28 @@ for(let i=0; i < tokensWithoutParentheses.length; i++) {
     }
 }
 tokensWithoutParentheses = stackTan
+
+//Gerer Pi π
+let stackPi = []
+for(let i=0; i < tokensWithoutParentheses.length; i++) {
+    let token = tokensWithoutParentheses[i]
+    if(token === "π") {
+        const prev = parseFloat(stackPi[stackPi.length - 1])
+        const next = parseFloat(tokensWithoutParentheses[i + 1])
+        if(!isNaN(prev)){
+            stackPi[stackPi.length - 1] = prev * Math.PI
+        }
+        else if(!isNaN(next)) {
+            stackPi.push(Math.PI * parseFloat(next))
+            i++
+        } else {
+            stackPi.push(Math.PI)
+        }
+    } else {
+        stackPi.push(isNaN(token) ? token : parseFloat(token))
+    }
+}
+tokensWithoutParentheses = stackPi
 
 // Gerer la prioriter des operation * et /
     let stack = [];
