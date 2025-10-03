@@ -144,11 +144,16 @@ body.dark-mode .display {
     color: white;
 }
 
+body.dark-mode .buttons-container button:hover {
+     background: #393333;
+    transform: translateY(-2px);
+}
+
 /* ========================================
    RESPONSIVE - TABLETTE (768px et moins)
    ======================================== */
 @media (max-width: 768px) {
-    
+
     .buttons-container {
         gap: 5px;
         }
