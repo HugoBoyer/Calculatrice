@@ -255,14 +255,6 @@ function evalParenthese(tokens) {
     return stackParentheses
 }
 
-// Calcul simple sans parenthèses
-function calculateSimple(tokens){
-    // On peut réutiliser la même logique que calculate pour x², %, √, sin/cos/tan etc.
-    // Ici pour simplifier, on retourne juste les nombres si aucun opérateur
-    if(tokens.length === 1) return tokens[0];
-    return calculate(tokens.join(''), true);
-}
-
 function Superscript(express){
     const UnicodeMap = {
         '0': '⁰',
