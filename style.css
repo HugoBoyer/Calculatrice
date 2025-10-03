@@ -18,7 +18,7 @@ body {
 */
 .calculator {
     width: 100%;
-    height: calc(100vh - 40px); /* ✅ UN SEUL calc() ici */
+    height: calc(100dvh - 40px); /* ✅ UN SEUL calc() ici */
     display: flex;
     flex-direction: column;
 }
@@ -32,7 +32,7 @@ body {
     height: clamp(200px, 30vh, 400px);
     text-align: right;
     box-sizing: border-box;
-    font-size: clamp(50px, 8vw, 60px);
+    font-size: clamp(50px, 20vw, 60px);
     margin-bottom: 20px;
     margin-top: 20px;
     border: 0px solid white;
@@ -148,6 +148,7 @@ body.dark-mode .display {
    RESPONSIVE - TABLETTE (768px et moins)
    ======================================== */
 @media (max-width: 768px) {
+    
     .buttons-container {
         gap: 5px;
         }
@@ -217,19 +218,6 @@ body.dark-mode .display {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* ========================================
    RESPONSIVE - TRÈS PETIT MOBILE (360px et moins)
    ======================================== */
@@ -258,8 +246,7 @@ body.dark-mode .display {
         width: 100%;
         height: auto;
         min-height: 100%;
-        margin-bottom: 20px;
-        margin-right: 0;
+        padding-bottom: 50px;
         font-size: clamp(35px, 2vw, 40px)
     }
 

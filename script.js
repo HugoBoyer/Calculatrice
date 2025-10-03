@@ -188,7 +188,27 @@ function calculate(expr, completeOperation = false) {
     }
  tokensWithoutParentheses = stackRacine;
 
-    // Gerer le Cos Radian
+
+
+
+
+ // Gerer le sin radian
+ let stackSin = []
+ for(let i=0; i < tokensWithoutParentheses.length; i++) {
+    let token = tokensWithoutParentheses[i]
+    if(token === "sin") {
+        const next = parseFloat(tokensWithoutParentheses[i + 1])
+        stackSin.push(Math.sin(next))
+        i++
+    } else {
+        stackSin.push(token)
+    }
+ }
+
+tokensWithoutParentheses = stackSin
+
+
+// Gerer le Cos Radian
     let stackCos = [];
     for (let i = 0; i < tokensWithoutParentheses.length; i++) {
         let token = tokensWithoutParentheses[i]
@@ -204,8 +224,21 @@ function calculate(expr, completeOperation = false) {
  tokensWithoutParentheses = stackCos;
 
 
+// Gerer le tan radian
+let stackTan = []
+for(let i=0; i < tokensWithoutParentheses.length; i++) {
+    let token = tokensWithoutParentheses[i]
+    if(token === "tan") {
+        const next = parseFloat(tokensWithoutParentheses[i + 1])
+        stackTan.push(Math.tan(next))
+        i++
+    } else {
+        stackTan.push(token)
+    }
+}
+tokensWithoutParentheses = stackTan
 
-    // Gerer la prioriter des operation * et /
+// Gerer la prioriter des operation * et /
     let stack = [];
     let i = 0;
     while (i < tokensWithoutParentheses.length) {
